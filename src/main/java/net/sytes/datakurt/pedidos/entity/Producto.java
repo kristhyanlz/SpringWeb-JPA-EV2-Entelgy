@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "productos")
@@ -27,4 +28,7 @@ public class Producto {
   
   @Column(nullable = false)
   private BigDecimal precioProducto;
+  
+  @ManyToMany(mappedBy = "productos") // Relación inversa
+  private List<Pedido> estudiantes;
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/cliente")
+@RequestMapping("/api/clientes")
 @RequiredArgsConstructor
 public class ClienteController {
   

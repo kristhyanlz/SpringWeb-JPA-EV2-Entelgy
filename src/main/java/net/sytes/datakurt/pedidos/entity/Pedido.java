@@ -24,8 +24,18 @@ public class Pedido {
   @JoinColumn(name = "cliente_id", referencedColumnName = "idCliente")
   private Cliente cliente;
   
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)//, mappedBy = "pedidos")
+  @ManyToMany(cascade = CascadeType.ALL)//, mappedBy = "pedidos")
+  @JoinTable(
+      name = "pedidos_productos", // Nombre de la tabla intermedia
+      joinColumns = @JoinColumn(name = "id_pedido"), // FK hacia Estudiante
+      inverseJoinColumns = @JoinColumn(name = "id_producto") // FK hacia Curso
+  )
   private List<Producto> productos;
+  
+  public void addProducto(Producto producto){
+    productos.add(producto);
+    //producto.set
+  }
   
   @Column(nullable = false)
   private String direccionEnvio;
