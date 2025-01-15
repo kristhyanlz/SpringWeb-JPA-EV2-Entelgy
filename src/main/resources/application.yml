@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  aplication:
+    name: pedidos
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pedidos
+    username: entelgy
+    password: entelgypg
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+#sudo docker run --name pg-ev2-entelgy -p 5432:5432 -e POSTGRES_USER=entelgy -e POSTGRES_PASSWORD=entelgypg -e POSTGRES_DB=pedidos -d postgres
