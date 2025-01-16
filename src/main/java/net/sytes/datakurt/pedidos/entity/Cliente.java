@@ -1,5 +1,6 @@
 package net.sytes.datakurt.pedidos.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,17 @@ public class Cliente {
   @Column(nullable = true)
   private String nombreCliente;
   
-  @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
   private List<Pedido> pedidos;
+  
+  public void addPedido(Pedido pedido){
+    pedidos.add(pedido);
+    pedido.setCliente(this);
+  }
+  
+  public void removePedido(Pedido pedido){
+    pedidos.remove(pedido);
+    pedido.setCliente(null);
+  }
 }
