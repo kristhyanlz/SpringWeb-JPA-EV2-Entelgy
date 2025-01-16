@@ -31,4 +31,20 @@ public class Producto {
   
   @ManyToMany(mappedBy = "productos") // Relación inversa
   private List<Pedido> pedidos;
+  
+  public void addPedido(Pedido pedido){
+    pedidos.add(pedido);
+    
+    List<Producto> listaProductos =  pedido.getProductos();
+    listaProductos.add(this);
+    pedido.setProductos(listaProductos);
+  }
+  
+  public void removePedido(Pedido pedido){
+    pedidos.remove(pedido);
+    
+    List<Producto> listaProductos =  pedido.getProductos();
+    listaProductos.remove(this);
+    pedido.setProductos(listaProductos);
+  }
 }

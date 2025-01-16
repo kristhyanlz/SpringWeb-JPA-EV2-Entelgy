@@ -25,8 +25,8 @@ public class Pedido {
   @Column(nullable = false)
   private LocalDate fechaCompra;
   
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "cliente_id")//, referencedColumnName = "idCliente")
+  @ManyToOne
+  @JoinColumn(name = "cliente_id", referencedColumnName = "idCliente")//Descomentando el ref
   @JsonBackReference
   private Cliente cliente;
   
