@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "clientes")
 @Data
@@ -18,4 +20,7 @@ public class Cliente {
   
   @Column(nullable = true)
   private String nombreCliente;
+  
+  @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+  private List<Pedido> pedidos;
 }

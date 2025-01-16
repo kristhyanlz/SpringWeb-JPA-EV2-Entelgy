@@ -30,5 +30,5 @@ public class Producto {
   private BigDecimal precioProducto;
   
   @ManyToMany(mappedBy = "productos") // Relación inversa
-  private List<Pedido> estudiantes;
+  private List<Pedido> pedidos;
 }

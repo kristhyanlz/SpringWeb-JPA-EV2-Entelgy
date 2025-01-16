@@ -1,5 +1,6 @@
 package net.sytes.datakurt.pedidos.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,16 @@ public class Pedido {
   @Column(nullable = false)
   private LocalDate fechaCompra;
   
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "cliente_id", referencedColumnName = "idCliente")
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "cliente_id")//, referencedColumnName = "idCliente")
   private Cliente cliente;
   
   @ManyToMany(cascade = CascadeType.ALL)//, mappedBy = "pedidos")
+  //@JsonManagedReference
   @JoinTable(
       name = "pedidos_productos", // Nombre de la tabla intermedia
-      joinColumns = @JoinColumn(name = "id_pedido"), // FK hacia Estudiante
-      inverseJoinColumns = @JoinColumn(name = "id_producto") // FK hacia Curso
+      joinColumns = @JoinColumn(name = "id_pedido"), // FK Pedido
+      inverseJoinColumns = @JoinColumn(name = "id_producto") // FK Producto
   )
   private List<Producto> productos;
   
