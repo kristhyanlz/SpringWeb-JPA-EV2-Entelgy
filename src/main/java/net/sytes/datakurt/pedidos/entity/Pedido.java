@@ -1,6 +1,7 @@
 package net.sytes.datakurt.pedidos.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,8 @@ public class Pedido {
   
   @ManyToOne
   @JoinColumn(name = "cliente_id", referencedColumnName = "idCliente")//Descomentando el ref
-  @JsonBackReference
+  //@JsonBackReference
+  @JsonIgnoreProperties("pedidos")
   private Cliente cliente;
   
   @ManyToMany(cascade = CascadeType.ALL)//, mappedBy = "pedidos")
