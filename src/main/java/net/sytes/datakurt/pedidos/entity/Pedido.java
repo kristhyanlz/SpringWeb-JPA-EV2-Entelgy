@@ -29,7 +29,7 @@ public class Pedido {
   @JsonIgnoreProperties("pedidos")
   private Cliente cliente;
   
-  @ManyToMany(cascade = CascadeType.ALL)//, mappedBy = "pedidos")
+  @ManyToMany
   @JsonIgnoreProperties("pedidos")
   @JoinTable(
       name = "pedidos_productos", // Nombre de la tabla intermedia

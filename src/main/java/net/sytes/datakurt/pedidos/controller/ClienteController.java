@@ -45,12 +45,16 @@ public class ClienteController {
       updatedCliente.setNombreCliente(clienteDetails.getNombreCliente());
       updatedCliente.setDi(clienteDetails.getDi());
       
+      /*
+      //En pro de la integridad de los datos no se podrá modificar los pedidos
       //Limpiamos los pedidos para asegurar la asociacion
       updatedCliente.getPedidos().clear();
       //Volvemos a agregar a todos los pedidos
       for (Pedido pedido: clienteDetails.getPedidos()){
         updatedCliente.addPedido(pedido);
       }
+       */
+      
       return ResponseEntity.ok(clienteService.saveCliente(updatedCliente));
     }
     return ResponseEntity.notFound().build();

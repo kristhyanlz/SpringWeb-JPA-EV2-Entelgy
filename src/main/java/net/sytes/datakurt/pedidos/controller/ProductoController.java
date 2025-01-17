@@ -56,7 +56,8 @@ public class ProductoController {
         updatedProducto.addPedido(pedido);
       }
        */
-      updatedProducto.setPedidos(productoDetails.getPedidos());
+      //En pro de la integridad de los datos no se podrá modificar los pedidos
+      //updatedProducto.setPedidos(productoDetails.getPedidos());
       return ResponseEntity.ok(productoService.saveProducto(updatedProducto));
     }
     return ResponseEntity.notFound().build();
