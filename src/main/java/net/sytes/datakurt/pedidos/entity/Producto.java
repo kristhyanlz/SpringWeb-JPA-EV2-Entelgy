@@ -1,5 +1,6 @@
 package net.sytes.datakurt.pedidos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Producto {
   private BigDecimal precioProducto;
   
   @ManyToMany(mappedBy = "productos") // Relación inversa
+  @JsonIgnoreProperties("productos")
   private List<Pedido> pedidos;
   
   public void addPedido(Pedido pedido){

@@ -40,21 +40,24 @@ public class ProductoController {
   
   @PutMapping("/{id}")
   public ResponseEntity<Producto> updateProducto(@PathVariable Long id, @RequestBody Producto productoDetails){
-    Optional<Producto> producto = productoService.getProductoById(id);
+    Optional<Producto> productoOptional = productoService.getProductoById(id);
     
-    if (producto.isPresent()){
-      Producto updatedProducto = producto.get();
+    if (productoOptional.isPresent()){
+      Producto updatedProducto = productoOptional.get();
       updatedProducto.setDescripcionProducto(productoDetails.getDescripcionProducto());
       updatedProducto.setMarcaProducto(productoDetails.getMarcaProducto());
       updatedProducto.setNombreProducto(productoDetails.getNombreProducto());
       updatedProducto.setPrecioProducto(productoDetails.getPrecioProducto());
       
+      /*
       //Limpiamos los pedidos para asegurar la asociacion
       updatedProducto.getPedidos().clear();
       //Volvemos a agregar a todos los pedidos
       for(Pedido pedido : productoDetails.getPedidos()){
         updatedProducto.addPedido(pedido);
       }
+       */
+      updatedProducto.setPedidos(productoDetails.getPedidos());
       return ResponseEntity.ok(productoService.saveProducto(updatedProducto));
     }
     return ResponseEntity.notFound().build();

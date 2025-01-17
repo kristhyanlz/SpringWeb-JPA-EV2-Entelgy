@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.sytes.datakurt.pedidos.entity.Pedido;
 import net.sytes.datakurt.pedidos.entity.Producto;
 import net.sytes.datakurt.pedidos.service.PedidoService;
+import net.sytes.datakurt.pedidos.service.ProductoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PedidoController {
   private final PedidoService pedidoService;
+  private final ProductoService productoService;
   
   @GetMapping
   public List<Pedido> getPedidos(){
@@ -60,5 +62,17 @@ public class PedidoController {
   public ResponseEntity<Void> deletePedido(@PathVariable Long id){
     pedidoService.deletePedido(id);
     return ResponseEntity.noContent().build();
+  }
+  
+  @PostMapping("/addProducto/{id}")
+  public ResponseEntity<Pedido> addProducto(@PathVariable Long id, @RequestBody Producto reqProducto){
+    Optional<Producto> productoOptional = productoService.getProductoById(reqProducto.getIdProducto());
+    Optional<Pedido> pedidoOptional = pedidoService.getPedidoById(id);
+    if (productoOptional.isPresent() && pedidoOptional.isPresent()){
+      Pedido pedido = pedidoOptional.get();
+      pedido.addProducto(productoOptional.get());
+      return ResponseEntity.ok(pedidoService.savePedido(pedido));
+    }
+    return ResponseEntity.notFound().build();
   }
 }

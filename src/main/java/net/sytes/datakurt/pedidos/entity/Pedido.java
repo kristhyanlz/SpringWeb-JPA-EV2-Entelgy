@@ -33,7 +33,7 @@ public class Pedido {
   private Cliente cliente;
   
   @ManyToMany(cascade = CascadeType.ALL)//, mappedBy = "pedidos")
-  //@JsonManagedReference
+  @JsonIgnoreProperties("pedidos")
   @JoinTable(
       name = "pedidos_productos", // Nombre de la tabla intermedia
       joinColumns = @JoinColumn(name = "id_pedido"), // FK Pedido
