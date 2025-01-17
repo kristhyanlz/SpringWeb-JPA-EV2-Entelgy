@@ -1,8 +1,6 @@
 package net.sytes.datakurt.pedidos.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +22,7 @@ public class Cliente {
   @Column(nullable = true)
   private String nombreCliente;
   
-  //@JsonIgnore
   @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-  //@JsonManagedReference
   @JsonIgnoreProperties("cliente")
   private List<Pedido> pedidos;
   

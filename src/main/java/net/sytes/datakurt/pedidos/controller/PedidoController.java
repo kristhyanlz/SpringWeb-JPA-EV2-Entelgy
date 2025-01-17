@@ -46,7 +46,7 @@ public class PedidoController {
       //La FK se pasa normal
       updatedPedido.setCliente(pedidoDetails.getCliente());
       
-      //Limpiamos los productos para asegurar la asociacion
+      //Limpiamos los productos para asegurar la asociación
       updatedPedido.getProductos().clear();
       //Volvemos a agregar a todos los productos
       for(Producto producto : pedidoDetails.getProductos()){

@@ -3,7 +3,6 @@ package net.sytes.datakurt.pedidos.service;
 import lombok.RequiredArgsConstructor;
 import net.sytes.datakurt.pedidos.entity.Cliente;
 import net.sytes.datakurt.pedidos.repository.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

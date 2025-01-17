@@ -1,7 +1,6 @@
 package net.sytes.datakurt.pedidos.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.sytes.datakurt.pedidos.entity.Pedido;
 import net.sytes.datakurt.pedidos.entity.Producto;
 import net.sytes.datakurt.pedidos.service.ProductoService;
 import org.springframework.http.ResponseEntity;

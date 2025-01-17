@@ -30,7 +30,7 @@ public class Producto {
   @Column(nullable = false)
   private BigDecimal precioProducto;
   
-  @ManyToMany(mappedBy = "productos") // Relación inversa
+  @ManyToMany(mappedBy = "productos")
   @JsonIgnoreProperties("productos")
   private List<Pedido> pedidos;
   
