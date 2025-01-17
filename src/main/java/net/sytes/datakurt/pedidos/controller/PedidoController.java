@@ -2,6 +2,7 @@ package net.sytes.datakurt.pedidos.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.sytes.datakurt.pedidos.entity.Cliente;
+import net.sytes.datakurt.pedidos.entity.EstadoPedido;
 import net.sytes.datakurt.pedidos.entity.Pedido;
 import net.sytes.datakurt.pedidos.entity.Producto;
 import net.sytes.datakurt.pedidos.service.ClienteService;
@@ -51,6 +52,7 @@ public class PedidoController {
     if (pedidoOptional.isPresent()){
       Pedido updatedPedido = pedidoOptional.get();
       updatedPedido.setFechaCompra(pedidoDetails.getFechaCompra());
+      updatedPedido.setEstadoPedido(pedidoDetails.getEstadoPedido());
       //Costo total se calcula en el service
       updatedPedido.setDireccionEnvio(pedidoDetails.getDireccionEnvio());
       
@@ -74,6 +76,18 @@ public class PedidoController {
       } catch (PedidoInvalidoException e){
         return ResponseEntity.badRequest().body(e.getMessage());
       }
+    }
+    return ResponseEntity.notFound().build();
+  }
+  
+  @PutMapping("/{id}/estadoPedido")
+  public ResponseEntity<?> updateEstadoPedido(@PathVariable Long id, @RequestBody Pedido pedidoDetails){
+    Optional<Pedido> pedidoOptional = pedidoService.getPedidoById(id);
+    EstadoPedido estadoPedido = pedidoDetails.getEstadoPedido();
+    if(pedidoOptional.isPresent()){
+      Pedido pedido = pedidoOptional.get();
+      pedido.setEstadoPedido(estadoPedido);
+      return ResponseEntity.ok(pedidoService.savePedido(pedido));
     }
     return ResponseEntity.notFound().build();
   }

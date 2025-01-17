@@ -50,9 +50,9 @@ public class Pedido {
   private String direccionEnvio;
   
   @Column(nullable = false)
-  private BigDecimal costoTotal;
-  
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private EstadoPedido estadoPedido;
+  
+  @Column(nullable = false)
+  private BigDecimal costoTotal;
 }
