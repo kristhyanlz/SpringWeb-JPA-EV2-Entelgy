@@ -1,12 +1,16 @@
 package net.sytes.datakurt.pedidos.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.sytes.datakurt.pedidos.entity.Cliente;
 import net.sytes.datakurt.pedidos.entity.Pedido;
 import net.sytes.datakurt.pedidos.entity.Producto;
+import net.sytes.datakurt.pedidos.service.ClienteService;
 import net.sytes.datakurt.pedidos.service.PedidoService;
 import net.sytes.datakurt.pedidos.service.ProductoService;
+import net.sytes.datakurt.pedidos.service.exceptions.PedidoInvalidoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class PedidoController {
   private final PedidoService pedidoService;
   private final ProductoService productoService;
+  private final ClienteService clienteService;
   
   @GetMapping
   public List<Pedido> getPedidos(){
@@ -30,30 +35,45 @@ public class PedidoController {
   }
   
   @PostMapping
-  public Pedido createPedido(@RequestBody Pedido pedido) {
-    return pedidoService.savePedido(pedido);
+  public ResponseEntity<?> createPedido(@RequestBody Pedido pedido) {
+    try{
+      Pedido savedPedido = pedidoService.savePedido(pedido);
+      return ResponseEntity.ok(savedPedido);
+    } catch (PedidoInvalidoException e){
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+    
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Pedido> updatePedido(@PathVariable Long id, @RequestBody Pedido pedidoDetails){
+  public ResponseEntity<?> updatePedido(@PathVariable Long id, @RequestBody Pedido pedidoDetails){
     Optional<Pedido> pedidoOptional = pedidoService.getPedidoById(id);
     if (pedidoOptional.isPresent()){
       Pedido updatedPedido = pedidoOptional.get();
       updatedPedido.setFechaCompra(pedidoDetails.getFechaCompra());
-      //Esto se debería calcular
-      updatedPedido.setCostoTotal(pedidoDetails.getCostoTotal());
+      //Costo total se calcula en el service
       updatedPedido.setDireccionEnvio(pedidoDetails.getDireccionEnvio());
-      //La FK se pasa normal
-      updatedPedido.setCliente(pedidoDetails.getCliente());
+      
+      //La FK se busca por ID para evitar modificarlo
+      Optional<Cliente> cliente = clienteService.getClienteById(
+          pedidoDetails.getCliente().getIdCliente()
+      );
+      cliente.ifPresent(updatedPedido::setCliente);
       
       //Limpiamos los productos para asegurar la asociación
       updatedPedido.getProductos().clear();
       //Volvemos a agregar a todos los productos
-      for(Producto producto : pedidoDetails.getProductos()){
-        updatedPedido.addProducto(producto);
+      for(Producto _producto : pedidoDetails.getProductos()){
+        Optional<Producto> producto = productoService.getProductoById(_producto.getIdProducto());
+        producto.ifPresent(updatedPedido::addProducto);
       }
       
-      return ResponseEntity.ok(pedidoService.savePedido(updatedPedido));
+      try{
+        Pedido savedPedido = pedidoService.savePedido(updatedPedido);
+        return ResponseEntity.ok(savedPedido);
+      } catch (PedidoInvalidoException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
     }
     return ResponseEntity.notFound().build();
   }
@@ -64,14 +84,33 @@ public class PedidoController {
     return ResponseEntity.noContent().build();
   }
   
-  @PostMapping("/addProducto/{id}")
-  public ResponseEntity<Pedido> addProducto(@PathVariable Long id, @RequestBody Producto reqProducto){
+  @PostMapping("/{id}/producto")
+  public ResponseEntity<?> addProducto(@PathVariable Long id, @RequestBody Producto reqProducto){
     Optional<Producto> productoOptional = productoService.getProductoById(reqProducto.getIdProducto());
     Optional<Pedido> pedidoOptional = pedidoService.getPedidoById(id);
     if (productoOptional.isPresent() && pedidoOptional.isPresent()){
       Pedido pedido = pedidoOptional.get();
       pedido.addProducto(productoOptional.get());
+
       return ResponseEntity.ok(pedidoService.savePedido(pedido));
+    }
+    return ResponseEntity.notFound().build();
+  }
+  
+  @DeleteMapping("/{id_pedido}/producto/{id_producto}")
+  public ResponseEntity<?> removeProducto(@PathVariable(value = "id_pedido") Long idPedido, @PathVariable(value = "id_producto") Long idProducto){
+    Optional<Producto> productoOptional = productoService.getProductoById(idProducto);
+    Optional<Pedido> pedidoOptional = pedidoService.getPedidoById(idPedido);
+    if (productoOptional.isPresent() && pedidoOptional.isPresent()){
+      Pedido pedido = pedidoOptional.get();
+      pedido.removeProducto(productoOptional.get());
+      
+      try{
+        Pedido savedPedido = pedidoService.savePedido(pedido);
+        return ResponseEntity.ok(savedPedido);
+      } catch (PedidoInvalidoException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
     }
     return ResponseEntity.notFound().build();
   }

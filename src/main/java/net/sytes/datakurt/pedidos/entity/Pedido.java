@@ -38,8 +38,12 @@ public class Pedido {
   )
   private List<Producto> productos;
   
-  public void addProducto(Producto producto){
-    productos.add(producto);
+  public boolean addProducto(Producto producto){
+    return productos.add(producto);
+  }
+  
+  public boolean removeProducto(Producto producto){
+    return productos.remove(producto);
   }
   
   @Column(nullable = false)
@@ -48,4 +52,7 @@ public class Pedido {
   @Column(nullable = false)
   private BigDecimal costoTotal;
   
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private EstadoPedido estadoPedido;
 }
